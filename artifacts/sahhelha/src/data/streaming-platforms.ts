@@ -57,8 +57,8 @@ export const STREAMING_PLATFORMS = [
     detail: "Arabic originals and much more",
     titles: [
       { title: "Al Thaman", genre: "Arabic · Drama", art: "arabic", background: "radial-gradient(ellipse at 50% 38%, #c78b5b 0%, transparent 40%), linear-gradient(150deg, #5b2b28, #171018 78%)" },
-      { title: "Al Aseouf", genre: "Gulf · Period drama", art: "arabic", background: "radial-gradient(ellipse at 50% 34%, #d8b16b 0%, transparent 38%), linear-gradient(150deg, #795333, #1b1713 78%)" },
-      { title: "Sikka Safar", genre: "Arabic · Comedy", art: "neon", background: "radial-gradient(ellipse at 50% 32%, #b17961 0%, transparent 38%), linear-gradient(150deg, #4c2b39, #14121a 78%)" },
+      { title: "Stiletto", genre: "Arabic · Drama", art: "gothic", background: "radial-gradient(ellipse at 50% 32%, #b1798f 0%, transparent 38%), linear-gradient(150deg, #442338, #14121a 78%)" },
+      { title: "Salon Zahra", genre: "Arabic · Comedy", art: "neon", background: "radial-gradient(ellipse at 50% 32%, #b17961 0%, transparent 38%), linear-gradient(150deg, #4c2b39, #14121a 78%)" },
       { title: "Rashash", genre: "Crime · Drama", art: "city", background: "radial-gradient(ellipse at 50% 33%, #92724d 0%, transparent 38%), linear-gradient(150deg, #3a3022, #111313 78%)" },
     ],
   },
@@ -78,3 +78,82 @@ export const STREAMING_PLATFORMS = [
 ] as const;
 
 export type StreamingPlatform = (typeof STREAMING_PLATFORMS)[number];
+
+export const POSTER_IMAGES: Record<string, { imageUrl: string; sourceUrl: string }> = {
+  "Stranger Things": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/595/1489169.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/2993/stranger-things",
+  },
+  Wednesday: {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/586/1466410.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/53647/wednesday",
+  },
+  "Squid Game": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/576/1440521.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/43687/squid-game",
+  },
+  "The Night Agent": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/614/1536331.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/56512/the-night-agent",
+  },
+  "The Last of Us": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/563/1409008.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/46562/the-last-of-us",
+  },
+  "House of the Dragon": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/627/1568449.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/44778/house-of-the-dragon",
+  },
+  Euphoria: {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/621/1552657.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/28826/euphoria",
+  },
+  "The Penguin": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/536/1340329.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/60920/the-penguin",
+  },
+  "The White Lotus": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/557/1393876.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/51394/the-white-lotus",
+  },
+  Succession: {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/453/1134275.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/23470/succession",
+  },
+  Chernobyl: {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/193/482599.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/30770/chernobyl",
+  },
+  "Al Thaman": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/445/1114669.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/66852/al-thaman",
+  },
+  Stiletto: {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/420/1052424.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/63913/stiletto",
+  },
+  "Salon Zahra": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/411/1029457.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/62387/salon-zahra",
+  },
+  Rashash: {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/419/1048889.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/63658/rashash",
+  },
+  "The Bear": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/629/1574642.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/54198/the-bear",
+  },
+  "Only Murders in the Building": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/586/1466415.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/48830/only-murders-in-the-building",
+  },
+  "The Handmaid’s Tale": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/562/1406667.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/16579/the-handmaids-tale",
+  },
+  "Shōgun": {
+    imageUrl: "https://static.tvmaze.com/uploads/images/medium_portrait/506/1265637.jpg",
+    sourceUrl: "https://www.tvmaze.com/shows/37336/shogun",
+  },
+};

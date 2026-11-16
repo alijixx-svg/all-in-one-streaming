@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, EyeOff, ShieldCheck } from "lucide-react";
 import { Link, useRoute } from "wouter";
-import { STREAMING_PLATFORMS, type PosterArt, type StreamingPlatform } from "@/data/streaming-platforms";
+import { POSTER_IMAGES, STREAMING_PLATFORMS, type PosterArt, type StreamingPlatform } from "@/data/streaming-platforms";
 
 function PosterShapes({ art }: { art: PosterArt }) {
   if (art === "games") {
@@ -84,6 +84,9 @@ function PosterShapes({ art }: { art: PosterArt }) {
 }
 
 function PosterCard({ title, art, background }: { title: string; art: PosterArt; background: string }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const poster = POSTER_IMAGES[title];
+  const showPoster = Boolean(poster && !imageFailed);
   const gradientId = `poster-shade-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   return (
     <article className="min-w-0" data-testid={`card-title-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
@@ -93,19 +96,30 @@ function PosterCard({ title, art, background }: { title: string; art: PosterArt;
         aria-label={`Illustrative poster artwork for ${title}`}
         style={{ background }}
       >
+        {showPoster && poster ? (
+          <img
+            className="absolute inset-0 h-full w-full object-cover"
+            src={poster.imageUrl}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 360 540" aria-hidden="true">
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="white" stopOpacity=".04" />
+                <stop offset="100%" stopColor="black" stopOpacity=".48" />
+              </linearGradient>
+            </defs>
+            <PosterShapes art={art} />
+            <path d="M0 0h360v540H0z" fill={`url(#${gradientId})`} />
+          </svg>
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/70" />
-        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 360 540" aria-hidden="true">
-          <defs>
-            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="white" stopOpacity=".04" />
-              <stop offset="100%" stopColor="black" stopOpacity=".48" />
-            </linearGradient>
-          </defs>
-          <PosterShapes art={art} />
-          <path d="M0 0h360v540H0z" fill={`url(#${gradientId})`} />
-        </svg>
         <span className="absolute left-3 top-3 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[.18em] text-white/80 backdrop-blur">
-          Illustrative art
+          {showPoster ? "Poster image" : "Illustrative art"}
         </span>
         <div className="absolute inset-x-0 bottom-0 p-4">
           <p className="font-num text-[9px] uppercase tracking-[.22em] text-white/65">Featured pick</p>
@@ -180,14 +194,27 @@ function PlatformHighlights({ platform }: { platform: StreamingPlatform }) {
           {platform.titles.map((title) => (
             <div key={title.title} className="space-y-2">
               <PosterCard title={title.title} art={title.art} background={title.background} />
-              <p className="px-1 text-xs text-muted-foreground">{title.genre}</p>
+              <div className="flex items-center justify-between gap-2 px-1 text-xs text-muted-foreground">
+                <span>{title.genre}</span>
+                {POSTER_IMAGES[title.title] && (
+                  <a
+                    href={POSTER_IMAGES[title.title].sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0 text-primary hover:underline"
+                    data-testid={`link-poster-source-${title.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                  >
+                    Source
+                  </a>
+                )}
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       <aside className="rounded-2xl border border-primary/20 bg-primary/[.05] p-4 text-xs leading-5 text-muted-foreground sm:p-5" data-testid="notice-illustrative-catalog">
-        These are illustrative title examples with original artwork, not a live provider catalog. Availability can vary by country. ALL IN ONE does not play videos or provide third-party streaming access.
+        Title examples are not a live provider catalog, and availability can vary by country. Poster images are credited to <a href="https://www.tvmaze.com/" target="_blank" rel="noreferrer" className="text-primary underline">TVmaze</a>; image rights remain with their owners. ALL IN ONE does not play videos or provide third-party streaming access.
       </aside>
     </div>
   );
