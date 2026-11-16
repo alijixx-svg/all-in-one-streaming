@@ -7,7 +7,7 @@ type StoredUserData = {
 
 function getSupabaseConfig() {
   const rawUrl = process.env.SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!rawUrl || !serviceRoleKey) {
     throw new Error("Supabase account storage is not configured.");
   }
@@ -21,9 +21,13 @@ function getSupabaseConfig() {
 }
 
 function requestHeaders(serviceRoleKey: string, extra?: Record<string, string>) {
+  const authorizationHeader = serviceRoleKey.startsWith("sb_secret_")
+    ? {}
+    : { Authorization: `Bearer ${serviceRoleKey}` };
+
   return {
     apikey: serviceRoleKey,
-    Authorization: `Bearer ${serviceRoleKey}`,
+    ...authorizationHeader,
     "Content-Type": "application/json",
     ...extra,
   };
