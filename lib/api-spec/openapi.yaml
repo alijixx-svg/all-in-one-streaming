@@ -1,0 +1,245 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: account
+    description: Authenticated account data
+  - name: support
+    description: Public sign-in assistance
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /me/data:
+    get:
+      operationId: getMyData
+      tags: [account]
+      summary: Get the current user's app data
+      responses:
+        "200":
+          description: User-owned app data, or null when the account has not saved any yet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDataEnvelope"
+        "401":
+          description: Authentication required
+    put:
+      operationId: saveMyData
+      tags: [account]
+      summary: Save the current user's app data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  $ref: "#/components/schemas/UserAppData"
+              required: [data]
+      responses:
+        "200":
+          description: Saved user-owned app data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDataEnvelope"
+        "400":
+          description: Invalid app data
+        "401":
+          description: Authentication required
+  /login-help:
+    post:
+      operationId: askLoginHelp
+      tags: [support]
+      summary: Get general AI guidance for a sign-in problem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  minLength: 3
+                  maxLength: 600
+              required: [message]
+      responses:
+        "200":
+          description: General sign-in guidance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: string
+                required: [answer]
+        "400":
+          description: Message is invalid or contains information that should not be sent
+        "429":
+          description: Too many requests
+        "503":
+          description: AI help is not configured or temporarily unavailable
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    UserDataEnvelope:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/UserAppData"
+            - type: "null"
+        updatedAt:
+          type: string
+          format: date-time
+      required: [data]
+    UserAppData:
+      type: object
+      properties:
+        subscriptions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Subscription"
+        streamingMembership:
+          $ref: "#/components/schemas/StreamingMembership"
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Order"
+        tickets:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ticket"
+        favorites:
+          type: array
+          items:
+            type: string
+          maxItems: 500
+        cart:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+          maxItems: 100
+        foodCart:
+          oneOf:
+            - $ref: "#/components/schemas/FoodCart"
+            - type: "null"
+        welcomeOffer:
+          type: string
+          enum: [unseen, available, dismissed, used]
+      required: [subscriptions, streamingMembership, orders, tickets, favorites, cart, foodCart, welcomeOffer]
+    Subscription:
+      type: object
+      properties:
+        id: { type: string, maxLength: 100 }
+        name: { type: string, maxLength: 200 }
+        cost: { type: number, minimum: 0, maximum: 100000 }
+        billing: { type: string, enum: [monthly, yearly] }
+        renewal: { type: string, format: date }
+        paused: { type: boolean }
+        example: { type: boolean }
+      required: [id, name, cost, billing, renewal, paused]
+    StreamingMembership:
+      type: object
+      properties:
+        hasPurchasedBefore: { type: boolean }
+        startedAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        paidAmount: { type: number, minimum: 0, maximum: 100000 }
+        paymentReference: { type: string, maxLength: 200 }
+      required: [hasPurchasedBefore]
+    Order:
+      type: object
+      properties:
+        id: { type: string, maxLength: 100 }
+        ref: { type: string, maxLength: 100 }
+        kind: { type: string, enum: [shop, food, flight, taxi] }
+        title: { type: string, maxLength: 300 }
+        lines:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/OrderLine"
+        total: { type: number, minimum: 0, maximum: 1000000 }
+        createdAt: { type: string, format: date-time }
+        status: { type: string, enum: [placed, cancelled] }
+        meta: { type: string, maxLength: 2000 }
+        example: { type: boolean }
+        payment:
+          $ref: "#/components/schemas/DemoPayment"
+        originalTotal: { type: number, minimum: 0, maximum: 1000000 }
+        discount: { type: number, minimum: 0, maximum: 1000000 }
+      required: [id, ref, kind, title, lines, total, createdAt, status]
+    OrderLine:
+      type: object
+      properties:
+        label: { type: string, maxLength: 300 }
+        detail: { type: string, maxLength: 1000 }
+        qty: { type: number, minimum: 0, maximum: 10000 }
+        unit: { type: number, minimum: 0, maximum: 1000000 }
+      required: [label, qty, unit]
+    DemoPayment:
+      type: object
+      properties:
+        method: { type: string, enum: [KNET] }
+        status: { type: string, enum: [simulated] }
+        reference: { type: string, maxLength: 200 }
+      required: [method, status, reference]
+    Ticket:
+      type: object
+      properties:
+        id: { type: string, maxLength: 100 }
+        orderId: { type: string, maxLength: 100 }
+        type: { type: string, enum: [complaint, refund] }
+        description: { type: string, maxLength: 4000 }
+        status: { type: string, enum: [open, resolved] }
+        createdAt: { type: string, format: date-time }
+      required: [id, orderId, type, description, status, createdAt]
+    CartItem:
+      type: object
+      properties:
+        productId: { type: string, maxLength: 200 }
+        store: { type: string, maxLength: 200 }
+        price: { type: number, minimum: 0, maximum: 1000000 }
+        qty: { type: number, minimum: 0, maximum: 10000 }
+      required: [productId, store, price, qty]
+    FoodCart:
+      type: object
+      properties:
+        restaurantId: { type: string, maxLength: 200 }
+        items:
+          type: object
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 10000
+      required: [restaurantId, items]
+
