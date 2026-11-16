@@ -8,6 +8,7 @@ A responsive, English-language MVP for exploring a proposed streaming bundle in 
 - KNET checkout is simulated locally. It does not charge money, collect card details, or activate streaming access.
 - Guests can browse and use the demo without creating an account. Guest data stays in that browser.
 - Signed-in account data is stored server-side in Supabase. The service-role key is used by the API server only.
+- Each streaming service has a poster gallery with original illustrative artwork. Titles are examples, not a live regional catalog, and videos cannot be played in the demo.
 
 Platform names are shown for the proposed bundle only. This demo does not claim affiliation with or access to third-party streaming accounts.
 

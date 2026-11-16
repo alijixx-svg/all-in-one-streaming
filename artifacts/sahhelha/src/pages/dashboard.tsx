@@ -1,13 +1,6 @@
 import { Link } from "wouter";
-import { ArrowRight, BadgeCheck, Clapperboard, Play, ShieldCheck, Sparkles } from "lucide-react";
-
-const services = [
-  { name: "Netflix", mark: "N", tone: "service-netflix", detail: "Series, films and familiar favorites" },
-  { name: "HBO Max", mark: "H", tone: "service-hbo", detail: "Prestige stories and new discoveries" },
-  { name: "OSN", mark: "O", tone: "service-osn", detail: "A mix of international entertainment" },
-  { name: "Shahid", mark: "S", tone: "service-shahid", detail: "Arabic originals and much more" },
-  { name: "Hulu", mark: "h", tone: "service-hulu", detail: "A fresh range of shows and films" },
-];
+import { ArrowRight, ArrowUpRight, BadgeCheck, Clapperboard, Play, ShieldCheck, Sparkles } from "lucide-react";
+import { STREAMING_PLATFORMS } from "@/data/streaming-platforms";
 
 export default function Dashboard() {
   return (
@@ -47,17 +40,28 @@ export default function Dashboard() {
           <Clapperboard className="mb-1 hidden h-6 w-6 text-muted-foreground sm:block" aria-hidden="true" />
         </div>
         <div className="service-grid stagger">
-          {services.map((service, index) => (
-            <article key={service.name} className={`service-tile ${service.tone}`} data-testid={`service-${index}`}>
+          {STREAMING_PLATFORMS.map((service, index) => (
+            <Link
+              key={service.slug}
+              href={`/platform/${service.slug}`}
+              className={`service-tile group text-left no-underline transition duration-200 hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/[.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${service.tone}`}
+              data-testid={`link-service-${service.slug}`}
+            >
               <div className="flex items-start justify-between">
                 <span className="service-mark">{service.mark}</span>
                 <span className="font-num text-[10px] text-foreground/45">0{index + 1}</span>
               </div>
-              <div><h3 className="font-display text-xl font-semibold">{service.name}</h3><p className="mt-1 text-xs leading-5 text-muted-foreground">{service.detail}</p></div>
-            </article>
+              <div>
+                <h3 className="font-display text-xl font-semibold">{service.name}</h3>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">{service.detail}</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary">
+                  Browse picks <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </div>
+            </Link>
           ))}
         </div>
-        <p className="mt-4 text-xs leading-5 text-muted-foreground">Service names are shown for the proposed bundle only. ALL IN ONE does not activate or provide access to third-party accounts.</p>
+        <p className="mt-4 text-xs leading-5 text-muted-foreground">Tap a service to browse illustrative title artwork. ALL IN ONE does not activate or provide access to third-party accounts.</p>
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1.15fr_.85fr]">

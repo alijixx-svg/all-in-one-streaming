@@ -13,6 +13,7 @@ import { Layout } from "@/components/app/layout";
 import Dashboard from "@/pages/dashboard";
 import Subscriptions from "@/pages/subscriptions";
 import LoginHelp from "@/pages/login-help";
+import PlatformPage from "@/pages/platform-page";
 
 const queryClient = new QueryClient();
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -184,6 +185,7 @@ function PublicPages() {
           <Switch>
             <Route path="/" component={Dashboard} />
             <Route path="/subscriptions" component={Subscriptions} />
+            <Route path="/platform/:slug" component={PlatformPage} />
             <Route component={NotFound} />
           </Switch>
         </RoutedErrorBoundary>
